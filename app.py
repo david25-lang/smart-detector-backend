@@ -103,7 +103,24 @@ async def root():
 
 @app.get("/health", tags=["Health"])
 async def health():
-    return {"success": True, "status": "ok"}
-
+    return {
+        "success": True,
+        "status": "ok",
+        "yolo_loaded": app.state.yolo_service is not None,
+        "cnn_loaded": app.state.cnn_service is not None,
+    }
 
 app.include_router(api_router, prefix=settings.API_PREFIX)
+
+import os
+
+if __name__ == "__main__":
+    import uvicorn
+
+    port = int(os.environ.get("PORT", 8000))
+
+    uvicorn.run(
+        "app:app",
+        host="0.0.0.0",
+        port=port,
+    )
